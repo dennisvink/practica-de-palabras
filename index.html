@@ -1,0 +1,116 @@
+<html>
+  <head>
+    <title>Practice Spanish words | Pr&aacute;ctica de palabres </title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+  </head>
+  <body>
+    <script>
+      var arguments = window.location.hash;
+      if(arguments !== "") {
+        let tmp = arguments.split("/");
+        var esp_words = tmp[0].split("#")[1].split(",");
+        var eng_words = tmp[1].split(",");
+      }
+    </script>
+    <h1>Ejercicios de espa&ntilde;ol &#127466;&#127480;</h1>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-6">
+          <span id="leftpane">
+          </span>
+        </div>
+        <div class="col-lg-6" style="border-left: 1px solid #999;>
+          <span id="rightpane"><input type="answer" class="answer" id="answer" value="">&nbsp;<input type="button" class="enviar" id="enviar" value="Enviar"></span>
+          <br />
+          <br />
+          <input type="button" class="next" value="&gt;&gt; Siguiente palabra &gt;&gt;">
+        </div>
+      </div>
+    </div>
+    <script>
+      if(arguments == "") {
+        // $("#leftpane").html("No tengo palabres!");
+      } else {
+        function pickWord() {
+          let chosen_word = Math.floor(Math.random() * esp_words.length);
+          let idioma = Math.floor(Math.random() * 2);
+          let correct_answer = "";
+          $(".answer").val("");
+          if(idioma == 0) {
+            $("#leftpane").html("Que es <strong>" + decodeURI(esp_words[chosen_word]) + "</strong> en Ingles?");
+            correct_answer = decodeURI(eng_words[chosen_word])
+          } else {
+            $("#leftpane").html("What is <strong>" + decodeURI(eng_words[chosen_word]) + "</strong> in Spanish?");
+            correct_answer = decodeURI(esp_words[chosen_word])
+          }
+          return(correct_answer);
+        }
+
+
+        var correct_answer = pickWord();
+        var input = document.getElementById("answer");
+        input.addEventListener("keyup", function(event) {
+          if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("enviar").click();
+          }
+        });
+
+        $(".enviar").on('click', function() {
+
+          given_answer = $(".answer").val();
+          if(given_answer.toLowerCase() != correct_answer.toLowerCase()) {
+            $("#errormsg").html("La respuesta <strong>" + given_answer +  "</strong> es incorrecta. La repuesta correcta es: <strong>" + correct_answer + "</strong>");
+            $("#toastMessageError").toast('show');
+          } else {
+            correct_answer = pickWord();
+            $("#toastMessageCorrect").toast('show');
+          }
+        });
+        $(".next").on("click", function() {
+          correct_answer = pickWord();
+        });
+      }
+
+      window.setInterval(function(){
+        $(".practicar").each(function() {
+          let randnum = Math.floor(Math.random() * 4096);
+          $(this).attr("target", "_new" + randnum.toString());
+      });
+      }, 500);
+    </script>
+
+    <div style="position: relative; min-height: 300px;">
+      <div style="position: fixed; top: 15%; left: 0;">
+        <div class="toast" id="toastMessageError" data-delay="3000">
+          <div class="toast-header">
+            <strong class="mr-auto"><i class="fa fa-grav"></i> <font color="red">Incorrect!</font></strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+          </div>
+          <div class="toast-body" id="errormsg">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position: relative; min-height: 300px;">
+      <div style="position: fixed; top: 15%; left: 0;">
+        <div class="toast" id="toastMessageCorrect" data-delay="1000">
+          <div class="toast-header">
+            <strong class="mr-auto"><i class="fa fa-grav"></i> <font color="green">Correct!</font></strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+          </div>
+          <div class="toast-body">
+            Tienes raz&oacute;n, muy bien!
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="#lunes,martes,mi&eacute;rcoles,jueves,viernes,s&aacute;bado,domingo/monday,tuesday,wednesday,thursday,friday,saturday,sunday" class="practicar" target="_new">Practica los d&iacute;as de la semana</a><br />
+    <a href="#primavera,verano,oto&ntilde;o,invierno/spring,summer,fall,winter" class="practicar" target="_new">Practica las estaciones</a><br />
+    <a href="#enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre,noviembre,diciembre/january,february,march,april,may,june,juli,august,september,october,november,december" class="practicar" target="_new">Practica los meses</a><br />
+  </body>
+</html>
